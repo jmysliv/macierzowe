@@ -36,7 +36,7 @@ Pseudokod naszej implementacji algorytmu rekurencyjnego.
         
 ```
 
-Nasza funkją przyjmuję na wejście cztery argumenty:
+Nasza funkcja przyjmuję na wejście cztery argumenty:
 * Macierz wejściową A
 * Macierz wejściową B
 * Macierz wynikową C do której będzie zapisywać wyniki mnożenia
@@ -46,4 +46,15 @@ algorytmu metodą klasyczną
 
 ### Wykres czasu wykonania od wielkości macierzy dla rónych wartości parametru l
 
+![image](time.jpg)
+
+Dla większych macierzy (k>=8) można zauważyć że algorytm Bineta pozwala przyśpieszyć działanie algorytmy. Programy z mniejszym parametrem l, wykonują się szybciej. Jest to spowodowane tym, że w tych wypadkach tylko najmniejsze macierze liczone są algorytmem klasycznym co pozwala przyśpieszyć mnożenie.
 ### Wykres liczby operacji zmiennoprzecinkowych od wielkości macierzy dla rónych wartości parametru l
+
+![image](op.jpg)
+
+Jak widać niezależnie od parametru l liczba operacji zmiennoprzecinkowych jest niezmienna. Jest ona natomiast liniowo proporcjonalna do wielkości macierzy.
+
+### Wnioski
+
+Algorytm rekurencyjny Bineta pozwala w pewnym stopniu przyśpieszyć mnożenie macierzy. Przyśpieszenie jest tym bardziej widoczne czym większa jest macierz. Dodatkowo algorytm ten pozwala w teorii mnożyć bloki macierzy równolegle co pozwoliło by na jeszcze większy wzrost przyśpieszenia czasu mnożenia macierzy.
