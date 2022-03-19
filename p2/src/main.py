@@ -2,14 +2,14 @@ import random
 from copy import copy
 import numpy as np
 
-## we received the best results with such value
+"we received the best results with such value"
 L = 2**4
 global flop_counter
 
 
 def mul(A, B, C, ax, ay, bx, by, cx, cy, n):
     global flop_counter
-    if (n <= L):
+    if n <= L:
         for a in range(n):
             for b in range(n):
                 for c in range(n):
@@ -68,10 +68,10 @@ def inverse(A):
                 result[i][j] += A11_inverse[i][j]
                 flop_counter = flop_counter + 1
             # result12
-            if i < h and j >= h:
-                result[i][h] = -A11_inverse_A12_S22_inverse[i][j-h]
+            if i < h <= j:
+                result[i][j] = -A11_inverse_A12_S22_inverse[i][j-h]
             # result21
-            if i >= h and j < h:
+            if i >= h > j:
                 result[i][j] = -S22_inverse_A21_A11_inverse[i-h][j]
             # result22
             if i >= h and j >= h:
@@ -80,12 +80,11 @@ def inverse(A):
     return result
 
 
-
 def print_matrix(A):
     for row in A:
-        print(row)
-
-
+        for el in row:
+            print(f"{el:3.3f}", end=" ")
+        print()
 
 
 if __name__ == '__main__':
@@ -94,19 +93,18 @@ if __name__ == '__main__':
     flop_counter = 0
 
     A = [[random.randint(1, 4) for _ in range(n)] for _ in range(n)]
-    # C = [[0 for _ in range(n)] for _ in range(n)]
-
-    # mul(A, copy(A), C, 0, 0, 0, 0, 0, 0, n)
-    # C = np.array(C)
-    # A = np.array(A)
-    # print(np.sum(C != (A @ A)))
-    print(np.linalg.det(A))
-    print(np.linalg.inv(A))
     print_matrix(A)
+    print("#" * 30)
+
+    print(np.linalg.inv(A))
+    print("#" * 30)
     A_inverse = inverse(A)
     print_matrix(A_inverse)
+    print("#" * 30)
     # checking if works
     C = [[0 for _ in range(n)] for _ in range(n)]
     mul(A, A_inverse, C, 0,0,0,0,0,0,n)
     print_matrix(C)
-    print(flop_counter)
+    print(np.linalg.det(A))
+    # print(flop_counter)
+    # print("#" * 30)
