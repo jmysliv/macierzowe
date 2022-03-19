@@ -40,12 +40,6 @@ def inverse(A):
     A21 = copy([row[:h] for row in A[h:]])
     A22 = copy([row[h:] for row in A[h:]])
 
-    print_matrix(A11)
-    print_matrix(A12)
-    print_matrix(A21)
-    print_matrix(A22)
-
-
     A11_inverse = inverse(A11)
     A11_inverse_A12 = [[0 for _ in range(h)] for _ in range(h)]
     mul(A11_inverse, A12, A11_inverse_A12, 0, 0, 0, 0, 0, 0, h)
@@ -67,7 +61,6 @@ def inverse(A):
     result = [[0 for _ in range(n)] for _ in range(n)]
     mul(A11_inverse_A12_S22_inverse, A21_A11_inverse, result, 0, 0, 0, 0, 0, 0, h)
 
-    print_matrix()
     for i in range(n):
         for j in range(n):
             # result11
@@ -108,6 +101,7 @@ if __name__ == '__main__':
     # A = np.array(A)
     # print(np.sum(C != (A @ A)))
     print(np.linalg.det(A))
+    print(np.linalg.inv(A))
     print_matrix(A)
     A_inverse = inverse(A)
     print_matrix(A_inverse)
