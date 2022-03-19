@@ -1,4 +1,6 @@
 import random
+from copy import copy
+import numpy as np
 
 ## we received the best results with such value
 L = 2**4
@@ -11,14 +13,14 @@ def mul(A, B, C, ax, ay, bx, by, cx, cy, n):
         for a in range(n):
             for b in range(n):
                 for c in range(n):
-                    C[cx + a][cy + b] += A[ax + a][ay + c] * B[bx + c][bx + b]
+                    C[cx + a][cy + b] += A[ax + a][ay + c] * B[bx + c][by + b]
                     flop_counter = flop_counter + 2
     else:
         h = int(n/2)
         mul(A, B, C, ax, ay, bx, by, cx, cy, h)
         mul(A, B, C, ax, ay + h, bx + h, by, cx, cy, h)
         mul(A, B, C, ax, ay, bx, by + h, cx, cy + h, h)
-        mul(A, B, C, ax, ax + h, bx+h, bx+h, cx, cy+h, h)
+        mul(A, B, C, ax, ay + h, bx+h, by+h, cx, cy+h, h)
         mul(A, B, C, ax+h, ay, bx, by, cx+h, cy, h)
         mul(A, B, C, ax+h, ay+h, bx+h, by, cx+h, cy, h)
         mul(A, B, C, ax+h, ay, bx, by+h, cx+h, cy+h, h)
@@ -33,10 +35,16 @@ def inverse(A):
             return [[0]]
         return [[1/A[0][0]]]
     h = int(n/2)
-    A11 = [row[:h] for row in A[:h]] 
-    A12 = [row[h:] for row in A[:h]] 
-    A21 = [row[:h] for row in A[h:]] 
-    A22 = [row[h:] for row in A[h:]]
+    A11 = copy([row[:h] for row in A[:h]])
+    A12 = copy([row[h:] for row in A[:h]])
+    A21 = copy([row[:h] for row in A[h:]])
+    A22 = copy([row[h:] for row in A[h:]])
+
+    print_matrix(A11)
+    print_matrix(A12)
+    print_matrix(A21)
+    print_matrix(A22)
+
 
     A11_inverse = inverse(A11)
     A11_inverse_A12 = [[0 for _ in range(h)] for _ in range(h)]
@@ -59,6 +67,7 @@ def inverse(A):
     result = [[0 for _ in range(n)] for _ in range(n)]
     mul(A11_inverse_A12_S22_inverse, A21_A11_inverse, result, 0, 0, 0, 0, 0, 0, h)
 
+    print_matrix()
     for i in range(n):
         for j in range(n):
             # result11
@@ -79,6 +88,10 @@ def inverse(A):
 
 
 
+def print_matrix(A):
+    for row in A:
+        print(row)
+
 
 
 
@@ -87,14 +100,19 @@ if __name__ == '__main__':
     n = 2**k
     flop_counter = 0
 
-    A = [[random.randint(1, 2) for _ in range(n)] for _ in range(n)]
+    A = [[random.randint(1, 4) for _ in range(n)] for _ in range(n)]
+    # C = [[0 for _ in range(n)] for _ in range(n)]
 
-    print(A)
+    # mul(A, copy(A), C, 0, 0, 0, 0, 0, 0, n)
+    # C = np.array(C)
+    # A = np.array(A)
+    # print(np.sum(C != (A @ A)))
+    print(np.linalg.det(A))
+    print_matrix(A)
     A_inverse = inverse(A)
-    print(A_inverse)
-
+    print_matrix(A_inverse)
     # checking if works
     C = [[0 for _ in range(n)] for _ in range(n)]
     mul(A, A_inverse, C, 0,0,0,0,0,0,n)
-    print(C)
+    print_matrix(C)
     print(flop_counter)
