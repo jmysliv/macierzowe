@@ -1,6 +1,10 @@
 import random
+import time
 from copy import copy
+from tracemalloc import start
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 "we received the best results with such value"
 L = 2**4
@@ -86,25 +90,38 @@ def print_matrix(A):
             print(f"{el:3.3f}", end=" ")
         print()
 
+def save_plots(results, ylabel, filename):
+    results = np.array(results)
+    plt.figure(figsize=(60, 30))
+    plt.subplot(1, 2, 1)
+    plt.plot(results)
+    plt.xlabel("K [2^K - rozmiar macierzy]")
+    plt.ylabel(ylabel)
+    plt.subplot(1, 2, 2)
+    plt.plot(np.log(results))
+    plt.xlabel("K [2^K - rozmiar macierzy]")
+    plt.ylabel(f'Log {ylabel}')
+    
+    plt.savefig(filename)
+
 
 if __name__ == '__main__':
-    k = 2
-    n = 2**k
-    flop_counter = 0
+    times = []
+    flops = []
 
-    A = [[random.randint(1, 4) for _ in range(n)] for _ in range(n)]
-    print_matrix(A)
-    print("#" * 30)
-
-    print(np.linalg.inv(A))
-    print("#" * 30)
-    A_inverse = inverse(A)
-    print_matrix(A_inverse)
-    print("#" * 30)
-    # checking if works
-    C = [[0 for _ in range(n)] for _ in range(n)]
-    mul(A, A_inverse, C, 0,0,0,0,0,0,n)
-    print_matrix(C)
-    print(np.linalg.det(A))
-    # print(flop_counter)
-    # print("#" * 30)
+    for k in range(0, 9):
+        print(k)
+        flop_counter = 0
+        n = 2**k
+        A = [[random.randint(1, 4) for _ in range(n)] for _ in range(n)]
+        start_time = time.time()
+        A_inverse = inverse(A)
+        times.append(time.time() - start_time)
+        flops.append(flop_counter)
+        C = [[0 for _ in range(n)] for _ in range(n)]
+        mul(A, A_inverse, C, 0,0,0,0,0,0,n)
+    
+    print(times)
+    print(flops)
+    save_plots(times, 'Time [s]', 'time.jpg')
+    save_plots(flops, 'Liczba operacji zmienno-przecinkowych', 'flops.jpg')
